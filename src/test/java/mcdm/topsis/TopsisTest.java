@@ -6,7 +6,8 @@ import org.junit.Test;
 
 /*
  * 
- * @author danigpam@gmail.com
+ * @author danigpam
+ * https://github.com/danigpam
  * 
  */
 public class TopsisTest   {

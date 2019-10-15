@@ -11,7 +11,8 @@ import java.util.List;
  * 
  * See TopsisTest test class for example of usage
  *  
- * @author danigpam@gmail.com
+ * @author danigpam
+ * https://github.com/danigpam
  * 
  */
 public class Topsis {
