@@ -2,7 +2,8 @@ package mcdm.topsis;
 
 /*
  * 
- * @author danigpam@gmail.com
+ * @author danigpam
+ * https://github.com/danigpam
  * 
  */
 public class Criteria {
