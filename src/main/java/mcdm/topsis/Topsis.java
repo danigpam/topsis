@@ -1,9 +1,12 @@
 package mcdm.topsis;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.sun.xml.internal.stream.writers.XMLStreamWriterImpl.UTF_8;
 
 /*
  * This is an implementation of the MCDM (Multi-Criteria Decision Making) solution using
@@ -50,17 +53,16 @@ public class Topsis {
 		return alternatives;
 	}
 
-	
 	/**
-	 * Given the list of alternatives, each populated with a list of criteria values, 
+	 * Given the list of alternatives, each populated with a list of criteria values,
 	 * this method will find the optimal solution, that is, which alternative
 	 * has the highest closeness score to the ideal solution
-	 * 
-	 * @return
+	 *
+	 * @return List of Alternative
 	 * @throws TopsisIncompleteAlternativeDataException
 	 */
-	public Alternative calculateOptimalSolution() throws TopsisIncompleteAlternativeDataException {
-		
+	public List<Alternative> calculateOptimalSolutionSortedList() throws TopsisIncompleteAlternativeDataException {
+
 		validateData();
 		populateScoreMatrix();
 		calculateNormalizedDecisionMatrix();
@@ -68,8 +70,45 @@ public class Topsis {
 		calculateDistancesFromIdealBestAndWorst();
 		calculatePerformanceScore();
 		sortAlternativesByPerformanceScoreDesc();
-		
-		return alternatives.get(0); //top solution after sorting is the best score
+
+		return alternatives; // Sorted result from the ideal solution to the worse one.
+	}
+
+	/**
+	 * Given the list of alternatives, each populated with a list of criteria values, 
+	 * this method will find the optimal solution, that is, which alternative
+	 * has the highest closeness score to the ideal solution
+	 *
+	 * @return Alternative
+	 * @throws TopsisIncompleteAlternativeDataException
+	 */
+	public Alternative calculateOptimalSolution() throws TopsisIncompleteAlternativeDataException {
+		return this.calculateOptimalSolutionSortedList().get(0); // Top solution after sorting is the best score
+	}
+
+	/**
+	 * Write alternatives into CSV file
+	 *
+	 * @Parameters the File path & the filename
+	 * @return void
+	 * @throws Exception
+	 */
+	public void writeResultsIntoCSVFile(String path, String fileName ) throws Exception {
+
+		if (this.alternatives.isEmpty()) throw new Exception("Alternatives should not be empty");
+
+		final Writer writer  = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(path + fileName + ".csv"), UTF_8));
+
+		StringBuilder header = new StringBuilder();
+		header.append("Alternative name").append(";")
+				.append("Criteria values").append("\n");
+
+		writer.write(header.toString());
+
+		for (Alternative alternative : this.alternatives) {
+				writer.write(alternative.getName() + ";" + alternative.getCriteriaValues().toString() + "\n");
+		}
 	}
 
 	private void validateData() throws TopsisIncompleteAlternativeDataException {
