@@ -109,6 +109,8 @@ public class Topsis {
 		for (Alternative alternative : this.alternatives) {
 				writer.write(alternative.getName() + ";" + alternative.getCriteriaValues().toString() + "\n");
 		}
+		
+		writer.close();
 	}
 
 	private void validateData() throws TopsisIncompleteAlternativeDataException {
